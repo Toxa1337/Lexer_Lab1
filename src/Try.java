@@ -1,4 +1,4 @@
-public class Try {
+/* public class Try {
 
     public static void main(String[] args) {
 
@@ -15,4 +15,4 @@ public class Try {
             System.out.println(lexer.errorMessage());
         }
     }
-}
+} */

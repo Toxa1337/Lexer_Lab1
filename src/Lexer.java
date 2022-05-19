@@ -1,105 +1,52 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Lexer {
-    private StringBuilder input = new StringBuilder();
-    private Token token;
-    private String lexema;
-    private boolean exausthed = false;
-    private String errorMessage = "";
-    private Set<Character> blankChars = new HashSet<Character>();
+    String code;
+    int pos=0;
+    ArrayList<Token> tokenList=new ArrayList<>();
 
-    public Lexer(String filePath) {
-        try (Stream<String> st = Files.lines(Paths.get(filePath))) {
-            st.forEach(input::append);
-        } catch (IOException ex) {
-            exausthed = true;
-            errorMessage = "НЕВОЗМОЖНО ПРОЧИТАТЬ ФАЙЛ ПО АДРЕСУ: " + filePath;
-            return;
-        }
-
-        blankChars.add('\r');
-        blankChars.add('\n');
-        blankChars.add((char) 8); // Back Space
-        blankChars.add((char) 9); // Tab
-        blankChars.add((char) 11); // Vertical Tab
-        blankChars.add((char) 12); // Form Feed (для больших файлов)
-        blankChars.add((char) 32); // Space
-
-        moveAhead();
+    public Lexer(String code) {
+        this.code = code;
     }
-
-    public void moveAhead() {
-        if (exausthed) {
-            return;
-        }
-
-        if (input.length() == 0) {
-            exausthed = true;
-            return;
-        }
-
-        ignoreWhiteSpaces();
-
-        if (findNextToken()) {
-            return;
-        }
-
-        exausthed = true;
-
-        if (input.length() > 0) {
-            errorMessage = "НЕОЖИДАЕМЫЙ СИМВОЛ: '" + input.charAt(0) + "'";
-        }
+    public ArrayList<Token> analyze(){
+        while(findTokens()){}
+        for (Token token : tokenList)
+            if (!(token.value.equals(" ") || token.value.equals("\\r")))
+                System.out.println(token.type.typeName + "  :  " + token.value + "                (" + token.pos + ")");
+        return this.tokenList;
     }
-
-    private void ignoreWhiteSpaces() {
-        int charsToDelete = 0;
-
-        while (blankChars.contains(input.charAt(charsToDelete))) {
-            charsToDelete++;
-        }
-
-        if (charsToDelete > 0) {
-            input.delete(0, charsToDelete);
-        }
-    }
-
-    private boolean findNextToken() {
-        for (Token t : Token.values()) {
-            int end = t.endOfMatch(input.toString());
-
-            if (end != -1) {
-                token = t;
-                lexema = input.substring(0, end);
-                input.delete(0, end);
+    public boolean findTokens(){
+        TokenType[] tokenTypes=TokenType.tokenTypeList;
+        if(this.pos>=code.length())
+            return false;
+        for (int i=0;i<tokenTypes.length;i++){
+            TokenType tokenType=tokenTypes[i];
+            String regex=tokenType.reg;
+            Matcher matcher=Pattern.compile(regex).matcher(code);
+            if(matcher.find(this.pos)&&matcher.start()==this.pos)
+            {
+                boolean is_new=true;
+                String result=this.code.substring(this.pos,this.pos+matcher.group().length());
+                Token token = new Token(tokenType, result, this.pos);
+                for(int j=0;j<tokenList.size();j++)
+                {
+                    if (tokenList.get(j).value.equals(token.value)&&tokenList.get(j).pos==token.pos)
+                    {
+                        is_new=false;
+                        break;
+                    }
+                }
+                if (is_new) {
+                    this.pos += result.length();
+                    if(token.type!=TokenType.tokenTypeList[3]&&token.type!=TokenType.tokenTypeList[2]&&token.type!=TokenType.tokenTypeList[1])
+                        tokenList.add(token);
+                }
                 return true;
             }
         }
-
-        return false;
+        throw new Error("Error on pos: "+this.pos);
     }
 
-    public Token currentToken() {
-        return token;
-    }
-
-    public String currentLexema() {
-        return lexema;
-    }
-
-    public boolean isSuccessful() {
-        return errorMessage.isEmpty();
-    }
-
-    public String errorMessage() {
-        return errorMessage;
-    }
-
-    public boolean isExausthed() {
-        return exausthed;
-    }
 }
