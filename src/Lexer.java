@@ -7,17 +7,18 @@ public class Lexer {
     int pos=0;
     ArrayList<Token> tokenList=new ArrayList<>();
 
-    public Lexer(String code) {
+    public Lexer(String code) { //строка исходного кода
         this.code = code;
     }
-    public ArrayList<Token> analyze(){
+
+    public ArrayList<Token> get(){ //получение токенов
         while(findTokens()){}
         for (Token token : tokenList)
             if (!(token.value.equals(" ") || token.value.equals("\\r")))
-                System.out.println(token.type.typeName + "  :  " + token.value + "                (" + token.pos + ")");
+                System.out.println(token.type.typeName + "  ->  " + token.value + "                (" + token.pos + ")");
         return this.tokenList;
     }
-    public boolean findTokens(){
+    public boolean findTokens(){ // поиск токенов
         TokenType[] tokenTypes=TokenType.tokenTypeList;
         if(this.pos>=code.length())
             return false;

@@ -3,102 +3,102 @@ import java.util.HashMap;
 public class Interpreter {
     HashMap<String,String> scope=new HashMap<>();
 
-    public String run(Node node){
-        if (node.getClass()==UnOpNode.class) {
-            if (((UnOpNode) node).operator.type.typeName.equals("PRINT")) {
-                System.out.println(this.run(((UnOpNode) node).value));
+    public String run(SimpleClass simpleClass){
+        if (simpleClass.getClass()== UnOpSimpleClass.class) {
+            if (((UnOpSimpleClass) simpleClass).operator.type.typeName.equals("T_PRINT")) {
+                System.out.println(this.run(((UnOpSimpleClass) simpleClass).value));
             }
         }
-        if (node.getClass()==BinOpNode.class) {
-            if (((BinOpNode) node).operator.type.typeName.equals("ASSIGN"))
+        if (simpleClass.getClass()== BinOpSimpleClass.class) {
+            if (((BinOpSimpleClass) simpleClass).operator.type.typeName.equals("T_ASSIGN"))
             {
-                String res = this.run(((BinOpNode) node).rightVal);
-                VarNode varNode = (VarNode) (((BinOpNode) node).leftVal);
+                String res = this.run(((BinOpSimpleClass) simpleClass).rightVal);
+                VarSimpleClass varNode = (VarSimpleClass) (((BinOpSimpleClass) simpleClass).leftVal);
                 this.scope.put(varNode.var.value, res);
                 return res;
             }
             else
             {
-                int left=Integer.parseInt(this.run(((BinOpNode) node).leftVal));
-                int right=Integer.parseInt(this.run(((BinOpNode) node).rightVal));
-                switch (((BinOpNode) node).operator.type.typeName){
-                    case "PLUS":
+                int left=Integer.parseInt(this.run(((BinOpSimpleClass) simpleClass).leftVal));
+                int right=Integer.parseInt(this.run(((BinOpSimpleClass) simpleClass).rightVal));
+                switch (((BinOpSimpleClass) simpleClass).operator.type.typeName){
+                    case "T_PL":
                         return String.valueOf(left+right);
-                    case "MINUS":
+                    case "T_MIN":
                         return String.valueOf(left-right);
-                    case "MULT":
+                    case "T_MULT":
                         return String.valueOf(left*right);
-                    case "DIV":
+                    case "T_DIV":
                         return String.valueOf(left/right);
-                    case "ASSIGN":
+                    case "T_ASSIGN":
                 }
             }
         }
-        if (node.getClass()==VarNode.class) {
-            return scope.get(((VarNode) node).var.value);
+        if (simpleClass.getClass()== VarSimpleClass.class) {
+            return scope.get(((VarSimpleClass) simpleClass).var.value);
         }
-        if (node.getClass()==NumberNode.class) {
-            return ((NumberNode) node).number.value;
+        if (simpleClass.getClass()== NumberSimpleClass.class) {
+            return ((NumberSimpleClass) simpleClass).number.value;
         }
-        if (node.getClass()==WhileNode.class){
-            int left=Integer.parseInt(this.run(((WhileNode) node).leftVal));
-            int right=Integer.parseInt(this.run(((WhileNode) node).rightVal));
-            switch (((WhileNode) node).operator.type.typeName) {
-                case "LESS":
+        if (simpleClass.getClass()== WhileSimpleClass.class){
+            int left=Integer.parseInt(this.run(((WhileSimpleClass) simpleClass).leftVal));
+            int right=Integer.parseInt(this.run(((WhileSimpleClass) simpleClass).rightVal));
+            switch (((WhileSimpleClass) simpleClass).operator.type.typeName) {
+                case "T_L":
                     while (left < right) {
-                        for (int i = 0; i < ((WhileNode) node).operations.size(); i++)
-                            this.run(((WhileNode) node).operations.get(i));
-                        left = Integer.parseInt(this.run(((WhileNode) node).leftVal));
-                        right = Integer.parseInt(this.run(((WhileNode) node).rightVal));
+                        for (int i = 0; i < ((WhileSimpleClass) simpleClass).operations.size(); i++)
+                            this.run(((WhileSimpleClass) simpleClass).operations.get(i));
+                        left = Integer.parseInt(this.run(((WhileSimpleClass) simpleClass).leftVal));
+                        right = Integer.parseInt(this.run(((WhileSimpleClass) simpleClass).rightVal));
                     }
                     break;
-                case "MORE":
+                case "T_M":
                     while (left > right) {
-                        for (int i = 0; i < ((WhileNode) node).operations.size(); i++)
-                            this.run(((WhileNode) node).operations.get(i));
-                        left = Integer.parseInt(this.run(((WhileNode) node).leftVal));
-                        right = Integer.parseInt(this.run(((WhileNode) node).rightVal));
+                        for (int i = 0; i < ((WhileSimpleClass) simpleClass).operations.size(); i++)
+                            this.run(((WhileSimpleClass) simpleClass).operations.get(i));
+                        left = Integer.parseInt(this.run(((WhileSimpleClass) simpleClass).leftVal));
+                        right = Integer.parseInt(this.run(((WhileSimpleClass) simpleClass).rightVal));
                     }
                     break;
-                case "EQUAL":
+                case "T_EQ":
                     while (left == right) {
-                        for (int i = 0; i < ((WhileNode) node).operations.size(); i++)
-                            this.run(((WhileNode) node).operations.get(i));
-                        left = Integer.parseInt(this.run(((WhileNode) node).leftVal));
-                        right = Integer.parseInt(this.run(((WhileNode) node).rightVal));
+                        for (int i = 0; i < ((WhileSimpleClass) simpleClass).operations.size(); i++)
+                            this.run(((WhileSimpleClass) simpleClass).operations.get(i));
+                        left = Integer.parseInt(this.run(((WhileSimpleClass) simpleClass).leftVal));
+                        right = Integer.parseInt(this.run(((WhileSimpleClass) simpleClass).rightVal));
                     }
                     break;
             }
         }
-        if (node.getClass()==ForNode.class){
-            int left=Integer.parseInt(this.run(((ForNode) node).leftVal));
-            int right=Integer.parseInt(this.run(((ForNode) node).rightVal));
-            switch (((ForNode) node).operator.type.typeName) {
-                case "LESS":
+        if (simpleClass.getClass()== ForSimpleClass.class){
+            int left=Integer.parseInt(this.run(((ForSimpleClass) simpleClass).leftVal));
+            int right=Integer.parseInt(this.run(((ForSimpleClass) simpleClass).rightVal));
+            switch (((ForSimpleClass) simpleClass).operator.type.typeName) {
+                case "T_L":
                     while (left < right) {
-                        for (int i = 0; i < ((ForNode) node).operations.size(); i++)
-                            this.run(((ForNode) node).operations.get(i));
-                        this.run(((ForNode) node).action);
-                        left = Integer.parseInt(this.run(((ForNode) node).leftVal));
-                        right = Integer.parseInt(this.run(((ForNode) node).rightVal));
+                        for (int i = 0; i < ((ForSimpleClass) simpleClass).operations.size(); i++)
+                            this.run(((ForSimpleClass) simpleClass).operations.get(i));
+                        this.run(((ForSimpleClass) simpleClass).action);
+                        left = Integer.parseInt(this.run(((ForSimpleClass) simpleClass).leftVal));
+                        right = Integer.parseInt(this.run(((ForSimpleClass) simpleClass).rightVal));
                     }
                     break;
-                case "MORE":
+                case "T_M":
                     while (left > right) {
-                        for (int i = 0; i < ((ForNode) node).operations.size(); i++)
-                            this.run(((ForNode) node).operations.get(i));
-                        this.run(((ForNode) node).action);
-                        left = Integer.parseInt(this.run(((ForNode) node).leftVal));
-                        right = Integer.parseInt(this.run(((ForNode) node).rightVal));
+                        for (int i = 0; i < ((ForSimpleClass) simpleClass).operations.size(); i++)
+                            this.run(((ForSimpleClass) simpleClass).operations.get(i));
+                        this.run(((ForSimpleClass) simpleClass).action);
+                        left = Integer.parseInt(this.run(((ForSimpleClass) simpleClass).leftVal));
+                        right = Integer.parseInt(this.run(((ForSimpleClass) simpleClass).rightVal));
                     }
                     break;
-                case "EQUAL":
+                case "T_EQ":
                     while (left == right) {
-                        for (int i = 0; i < ((ForNode) node).operations.size(); i++)
-                            this.run(((ForNode) node).operations.get(i));
-                        this.run(((ForNode) node).action);
-                        left = Integer.parseInt(this.run(((ForNode) node).leftVal));
-                        right = Integer.parseInt(this.run(((ForNode) node).rightVal));
+                        for (int i = 0; i < ((ForSimpleClass) simpleClass).operations.size(); i++)
+                            this.run(((ForSimpleClass) simpleClass).operations.get(i));
+                        this.run(((ForSimpleClass) simpleClass).action);
+                        left = Integer.parseInt(this.run(((ForSimpleClass) simpleClass).leftVal));
+                        right = Integer.parseInt(this.run(((ForSimpleClass) simpleClass).rightVal));
                     }
                     break;
             }
