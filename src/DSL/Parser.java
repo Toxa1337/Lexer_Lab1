@@ -57,25 +57,25 @@ public class Parser {
     }
     //
     private Node parseExpr() {
-        // expr -> assign_expr | loop_for | loop_while | stmt_if | io_console
+        // expr -> assign_expr | stmt_if | loop_while | loop_for | print
         Token expectToken = expect(new String[]{"IDENT", "T_WRITE", "T_FOR", "T_WHILE", "T_IF"});
         switch (expectToken.type()) {
-            case "IDENT" -> { // assign_expr -> init_expr ';'
+            case "IDENT" -> { // assign_expr -> init ';'
                 position--;
                 Node assign_expr = parseInit();
                 expect(new String[]{"SEP_END_LINE"});
                 return assign_expr;
             }
-            case "T_FOR" -> { // loop_for
+            case "T_FOR" -> { // for
                 return parseLoopFor();
             }
-            case "T_WHILE" -> { // loop_while
+            case "T_WHILE" -> { // while
                 return parseLoopWhile();
             }
-            case "T_IF" -> { // stmt_if
+            case "T_IF" -> { // if
                 return parseStmtIf();
             }
-            case "T_WRITE" -> { // io_console -> KW_WRITE value ';'
+            case "T_WRITE" -> { // print -> T_WRITE value ';'
                 Node valueToPrint = parseValue();
                 expect(new String[]{"SEP_END_LINE"});
                 return new UnOpNode(expectToken, valueToPrint);
@@ -92,8 +92,8 @@ public class Parser {
         return new BinOpNode(assign, idNode, asValue);
     }
     private Node parseValue() {
-        // value -> Compare | Condition | AddSub | MulDiv | Brackets | UnValue
-        //
+        // value -> value_types
+        //  value_types -> (Compare | Add_Sub | Mul_Div | Brackets | UnValue | Condition)
         // Организовано в порядке приоритета операций:
         // * Возвращает операцию сравнения,
         // * * либо операцию слож-выч,
@@ -133,7 +133,6 @@ public class Parser {
                 if (operator != null) {
                     Node rightOperand = parseValue(expected, select + 1);
                     leftOperand = new BinOpNode(operator, leftOperand, rightOperand);
-//                    operator = seekToken(operators.get(op));
                 }
                 return leftOperand;
             }
@@ -164,7 +163,7 @@ public class Parser {
     }
     //
     private Node parseLoopFor() {
-        // stmt_loop_for -> T_FOR '(' Init ';' Condition ';' expr ')' stmt_body
+        // for -> T_FOR '(' Init ';' Condition ';' expr ')' body
         expect(new String[]{"SEP_L_BRACKET"});
         Node init = parseInit();
         expect(new String[]{"SEP_END_LINE"});
@@ -182,7 +181,7 @@ public class Parser {
         return forNode;
     }
     private Node parseLoopWhile() {
-        // stmt_loop_while -> KW_WHILE '(' condition ')' stmt_body
+        // while -> T_WHILE '(' condition ')' body
         expect(new String[]{"SEP_L_BRACKET"});
 //        Node condition = parseCondition();
         Node condition = parseValue("Condition");
@@ -197,8 +196,8 @@ public class Parser {
         return whileNode;
     }
     private Node parseStmtIf() {
-        // stmt_if -> T_IF '(' condition ')' stmt_body stmt_else?
-        // stmt_else -> T_ELSE stmt_body
+        // if -> T_IF '(' condition ')' body else?
+        // else -> T_ELSE body
         expect(new String[]{"SEP_L_BRACKET"});
         Node condition = parseValue("Condition");
         expect(new String[]{"SEP_R_BRACKET"});

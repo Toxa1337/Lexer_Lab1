@@ -43,7 +43,6 @@ public class Interpreter {
                 int rightOperand = Integer.parseInt(executeNode(((BinOpNode) node).getRightOperand()));
                 switch (((BinOpNode) node).getOperator().type()) {
                     case "ADD_OP" -> { return String.valueOf(leftOperand + rightOperand); }
-                    //
                     case "SUB_OP" -> { return String.valueOf(leftOperand - rightOperand); }
                     case "MUL_OP" -> { return String.valueOf(leftOperand * rightOperand); }
                     case "DIV_OP" -> { return String.valueOf(leftOperand / rightOperand); }
