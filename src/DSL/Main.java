@@ -34,7 +34,7 @@ public class Main {
 
     public static void main(String[] args) {
         // Ввод
-        ArrayList<String> code = readInput(); //new CodeReader().readInput(); Прочитали код ПЕРЕДЕЛАТЬ ПОД СЕБЯ
+        ArrayList<String> code = readInput();
         System.out.println("\nВведенный код:");
         int lineCnt = 0;
         for (String line : code) System.out.println(++lineCnt + ".  " + line);
