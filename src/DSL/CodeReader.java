@@ -15,7 +15,7 @@ public class CodeReader {
             case 1 -> {
                 Scanner scanFile = null;
                 try {
-                    scanFile = new Scanner(new File("src/DSL/somecode.txt"));
+                    scanFile = new Scanner(new File("src/DSL/test_code.txt"));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

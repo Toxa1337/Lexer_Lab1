@@ -16,7 +16,7 @@ public class Main {
         int i = 0;
         //
         try {
-            sc = new Scanner(new File("src/DSL/somecode.txt"));
+            sc = new Scanner(new File("src/DSL/test_code.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
