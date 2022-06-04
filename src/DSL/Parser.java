@@ -1,7 +1,7 @@
 package DSL;
 
-import DSL.NODES.*;
-import DSL.TOKENS.Token;
+import DSL.node.*;
+import DSL.token.Token;
 
 import java.util.ArrayList;
 import java.util.Arrays;

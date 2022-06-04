@@ -1,6 +1,6 @@
 package DSL;
 
-import DSL.NODES.*;
+import DSL.node.*;
 
 import java.util.HashMap;
 

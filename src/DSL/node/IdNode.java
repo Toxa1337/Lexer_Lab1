@@ -1,6 +1,6 @@
-package DSL.NODES;
+package DSL.node;
 
-import DSL.TOKENS.Token;
+import DSL.token.Token;
 
 public class IdNode extends Node {
     Token ident;

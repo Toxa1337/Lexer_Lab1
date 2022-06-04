@@ -1,7 +1,7 @@
 package DSL;
 
-import DSL.NODES.Root;
-import DSL.TOKENS.Token;
+import DSL.node.Root;
+import DSL.token.Token;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;

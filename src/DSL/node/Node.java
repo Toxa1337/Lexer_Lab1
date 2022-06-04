@@ -1,3 +1,3 @@
-package DSL.NODES;
+package DSL.node;
 
 public class Node { }

@@ -1,6 +1,6 @@
 package DSL;
-import DSL.TOKENS.Token;
-import DSL.TOKENS.TokenList;
+import DSL.token.Token;
+import DSL.token.TokenList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

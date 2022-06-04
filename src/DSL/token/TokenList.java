@@ -1,4 +1,4 @@
-package DSL.TOKENS;
+package DSL.token;
 
 import java.util.LinkedHashMap;
 import java.util.regex.Pattern;

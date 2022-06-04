@@ -1,4 +1,4 @@
-package DSL.NODES;
+package DSL.node;
 
 import java.util.ArrayList;
 

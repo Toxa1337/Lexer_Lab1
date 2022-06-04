@@ -1,4 +1,4 @@
-package DSL.TOKENS;
+package DSL.token;
 
 public record Token(String type, String value, int position, int line) {
     //
